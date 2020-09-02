@@ -3,24 +3,23 @@ import pandas as pd
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from pandas_datareader import data
+import pandas_datareader as web
+import datetime as dt
 import matplotlib.pyplot as plt
 plt.style.use('bmh')
 
-start_date = '2019-08-01'
-end_date = '2020-07-31'
-panel_data = data.DataReader('AAPL', 'yahoo', start_date, end_date)
-
-panel_data.index = [x for x in range(1, len(panel_data.values)+1)]
+start = dt.datetime(2019,1,1)
+end = dt.datetime(2020,8,31)
+AAPL = web.DataReader('AAPL', 'yahoo', start, end).reset_index()
 
 plt.figure(figsize=(16,8))
 plt.title('APPLE')
 plt.xlabel('Days')
 plt.ylabel('Close Price USD')
-plt.plot(panel_data['Close'])
+plt.plot(AAPL['Close'])
 #plt.show()
 
-df = panel_data[['Close']]
+df = AAPL[['Close']]
 future_days = 25
 df['Prediction'] = df[['Close']].shift(-future_days)
 
